@@ -1,0 +1,15 @@
+[
+  {
+    "Id": "R150",
+    "Nombre": "Castillo de Sádaba",
+    "Descripcion": "Fortaleza medieval del siglo XIII en excelente estado de conservación.",
+    "Tipo": "Cultural - Castillo",
+    "Ubicacion": "Sádaba (Zaragoza)",
+    "Coordenadas": "42.281, -1.272",
+    "Horario": "10:00 - 18:00",
+    "Precio": "3 €",
+    "Accesibilidad": "Parcial",
+    "Servicios": "Visitas guiadas, parking",
+    "Estado": "Excelente"
+  }
+]

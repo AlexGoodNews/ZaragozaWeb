@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Buscador de Lugares</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        .card {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .campo {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Buscador de lugares</h2>
+    <input id="buscador" type="text" placeholder="Escribe un nombre o ID...">
+
+    <div id="resultado"></div>
+
+    <script>
+        let lugares = [];
+
+        // Cargar JSON
+        fetch("lugares.json")
+            .then(r => r.json())
+            .then(data => lugares = data);
+
+        // Buscar en tiempo real
+        document.getElementById("buscador").addEventListener("input", function () {
+            const q = this.value.toLowerCase();
+            if (!q) {
+                document.getElementById("resultado").innerHTML = "";
+                return;
+            }
+
+            const lugar = lugares.find(l =>
+                l.Nombre.toLowerCase().includes(q) ||
+                l.Id.toLowerCase().includes(q)
+            );
+
+            if (!lugar) {
+                document.getElementById("resultado").innerHTML = "<p>No encontrado</p>";
+                return;
+            }
+
+            document.getElementById("resultado").innerHTML = `
+                <div class="card">
+                    <div class="campo">ID:</div> ${lugar.Id}
+
+                    <div class="campo">Nombre:</div> ${lugar.Nombre}
+
+                    <div class="campo">Descripción:</div> ${lugar.Descripcion}
+
+                    <div class="campo">Tipo:</div>
+                    <select id="tipoSelect">
+                    <option ${lugar.Tipo === "Castillo" ? "selected" : ""}>Castillo</option>
+                    <option ${lugar.Tipo === "Conjunto histórico" ? "selected" : ""}>Conjunto histórico</option>
+                    <option ${lugar.Tipo === "Iglesia / ermita / monasterio" ? "selected" : ""}>Iglesia / ermita / monasterio</option>
+                    <option ${lugar.Tipo === "Museo / centro expositivo" ? "selected" : ""}>Museo / centro expositivo</option>
+                    <option ${lugar.Tipo === "Espacio natural" ? "selected" : ""}>Espacio natural</option>
+                    <option ${lugar.Tipo === "Mirador" ? "selected" : ""}>Mirador</option>
+                    <option ${lugar.Tipo === "Alojamiento turístico (clase marco)" ? "selected" : ""}>Alojamiento turístico (clase marco)</option>
+                    <option ${lugar.Tipo === "Hotel / hostal / apartamento" ? "selected" : ""}>Hotel / hostal / apartamento</option>
+                    <option ${lugar.Tipo === "Casa rural / agroturismo" ? "selected" : ""}>Casa rural / agroturismo</option>
+                    <option ${lugar.Tipo === "Restaurante" ? "selected" : ""}>Restaurante</option>
+                    <option ${lugar.Tipo === "Bar / cafetería" ? "selected" : ""}>Bar / cafetería</option>
+                    <option ${lugar.Tipo === "Oficina de turismo" ? "selected" : ""}>Oficina de turismo</option>
+                    <option ${lugar.Tipo === "Visitas guiadas / turismo activo" ? "selected" : ""}>Visitas guiadas / turismo activo</option>
+                    <option ${lugar.Tipo === "Fiesta / feria / jornada / recreación" ? "selected" : ""}>Fiesta / feria / jornada / recreación</option>
+                    <option ${lugar.Tipo === "Ruta cultural / naturaleza / gastronomía" ? "selected" : ""}>Ruta cultural / naturaleza / gastronomía</option>
+                    <option ${lugar.Tipo === "Parking / aseos / transporte / apoyo" ? "selected" : ""}>Parking / aseos / transporte / apoyo</option>
+                    <option ${lugar.Tipo === "Comarca / ayuntamiento / asociación" ? "selected" : ""}>Comarca / ayuntamiento / asociación</option>
+                    </select>
+
+                    <div class="campo">Ubicación:</div> ${lugar.Ubicacion}
+                    <div class="campo">Coordenadas:</div> ${lugar.Coordenadas}
+                    <div class="campo">Horario:</div> ${lugar.Horario}
+                    <div class="campo">Precio:</div> ${lugar.Precio}
+                    <div class="campo">Accesibilidad:</div> ${lugar.Accesibilidad}
+                    <div class="campo">Servicios:</div> ${lugar.Servicios}
+                    <div class="campo">Estado:</div> ${lugar.Estado}
+                </div>
+
+                <button id="guardarBtn" style="
+                    margin-top:20px;
+                    padding:10px 15px;
+                    font-size:16px;
+                    display:none;
+                ">Guardar cambios</button>
+                `;
+
+            // Listeners
+            const tipoSelect = document.getElementById("tipoSelect");
+            const guardarBtn = document.getElementById("guardarBtn");
+
+            tipoSelect.addEventListener("change", () => {
+                lugar.Tipo = tipoSelect.value;
+                guardarBtn.style.display = "block";
+            });
+
+            guardarBtn.addEventListener("click", () => {
+                alert("Cambios guardados en memoria:\n\n" + JSON.stringify(lugar, null, 2));
+                guardarBtn.style.display = "none";
+            });
+
+
+        });
+    </script>
+
+</body>
+
+</html>
