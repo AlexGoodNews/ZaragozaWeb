@@ -120,10 +120,30 @@
                 guardarBtn.style.display = "block";
             });
 
-            guardarBtn.addEventListener("click", () => {
-                alert("Cambios guardados en memoria:\n\n" + JSON.stringify(lugar, null, 2));
-                guardarBtn.style.display = "none";
+            guardarBtn.addEventListener("click", async () => {
+
+            // 1. Actualizar el array completo
+            const index = lugares.findIndex(l => l.Id === lugar.Id);
+            lugares[index] = lugar;
+
+            // 2. Enviar al Worker
+            const res = await fetch("raspy-sun-76bf-lugares-api.a-cavero.workers.dev/lugares", {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer TU_SECRETO"
+                },
+                body: JSON.stringify(lugares)
             });
+
+            if (res.ok) {
+                guardarBtn.style.display = "none";
+                alert("Cambios guardados en KV");
+            } else {
+                alert("Error al guardar");
+            }
+            });
+
 
 
         });
